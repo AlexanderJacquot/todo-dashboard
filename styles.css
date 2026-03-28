@@ -1,0 +1,649 @@
+/* ─── Todo Dashboard Plugin Styles ─────────────────────────────────────────── */
+
+.todo-dashboard-container {
+  padding: 12px 16px;
+  font-size: 14px;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────────── */
+
+.td-header {
+  margin-bottom: 16px;
+}
+
+.td-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.td-title {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  color: var(--text-normal);
+}
+
+.td-collapse-btn {
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  background: none;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  padding: 4px 10px;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.td-collapse-btn:hover {
+  color: var(--text-normal);
+  border-color: var(--text-muted);
+}
+
+/* ── Stats row ──────────────────────────────────────────────────────────────── */
+
+.td-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.td-stat-card {
+  background: var(--background-secondary);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.td-stat-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.td-stat-value {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-normal);
+}
+
+.td-stat-accent  { color: var(--color-accent); }
+.td-stat-danger  { color: var(--text-error); }
+.td-stat-success { color: var(--color-green); }
+
+/* ── Filters ────────────────────────────────────────────────────────────────── */
+
+.td-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.td-filter-label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.td-pill {
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  border: 1px solid var(--background-modifier-border);
+  color: var(--text-muted);
+  background: transparent;
+  transition: all 0.15s;
+}
+
+.td-pill:hover {
+  color: var(--text-normal);
+  border-color: var(--text-muted);
+}
+
+.td-pill-active {
+  background: var(--color-accent);
+  color: white !important;
+  border-color: var(--color-accent) !important;
+}
+
+.td-pill-high.td-pill-active  { background: var(--color-red); border-color: var(--color-red) !important; }
+.td-pill-medium.td-pill-active { background: var(--color-orange); border-color: var(--color-orange) !important; }
+
+/* Search */
+.td-search-wrap {
+  margin-left: auto;
+}
+
+.td-search {
+  font-size: 12px !important;
+  padding: 4px 10px !important;
+  border-radius: 999px !important;
+  width: 160px;
+  height: auto !important;
+  border: 1px solid var(--background-modifier-border) !important;
+  background: var(--background-secondary) !important;
+  color: var(--text-normal) !important;
+  box-shadow: none !important;
+}
+
+/* ── File list ──────────────────────────────────────────────────────────────── */
+
+.td-files-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.td-empty {
+  padding: 24px;
+  text-align: center;
+  color: var(--text-faint);
+  font-size: 13px;
+}
+
+/* ── File block ─────────────────────────────────────────────────────────────── */
+
+.td-file-block {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--background-primary);
+  transition: border-color 0.15s;
+}
+
+.td-file-block:hover {
+  border-color: var(--background-modifier-border-hover);
+}
+
+/* ── File header ────────────────────────────────────────────────────────────── */
+
+.td-file-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  cursor: pointer;
+  user-select: none;
+  gap: 8px;
+}
+
+.td-file-header:hover {
+  background: var(--background-secondary);
+}
+
+.td-file-header-left {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.td-file-path {
+  font-size: 11px;
+  color: var(--text-faint);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.td-file-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-normal);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.td-file-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.td-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-accent);
+  background: var(--color-accent-1);
+  border-radius: 999px;
+  padding: 1px 8px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.td-chevron {
+  color: var(--text-faint);
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.td-file-open .td-chevron {
+  transform: rotate(90deg);
+}
+
+.td-open-file {
+  color: var(--text-faint);
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.15s;
+  cursor: pointer;
+}
+
+.td-file-header:hover .td-open-file {
+  opacity: 1;
+}
+
+.td-open-file:hover {
+  color: var(--text-accent);
+}
+
+/* ── File body ──────────────────────────────────────────────────────────────── */
+
+.td-file-body {
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+/* ── Task row ───────────────────────────────────────────────────────────────── */
+
+.td-task-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--background-modifier-border-focus);
+  transition: background 0.1s;
+}
+
+.td-task-row:last-child {
+  border-bottom: none;
+}
+
+.td-task-row:hover {
+  background: var(--background-secondary);
+}
+
+.td-task-done {
+  opacity: 0.45;
+}
+
+/* Checkbox — styled to match Obsidian's own checkboxes */
+.td-checkbox {
+  margin-top: 3px;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  accent-color: var(--color-accent);
+}
+
+/* Task content */
+.td-task-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.td-task-text {
+  font-size: 13px;
+  color: var(--text-normal);
+  line-height: 1.5;
+  cursor: pointer;
+  word-break: break-word;
+}
+
+.td-task-done .td-task-text {
+  text-decoration: line-through;
+  color: var(--text-faint);
+}
+
+.td-task-text:hover {
+  color: var(--text-accent);
+  text-decoration: underline;
+}
+
+.td-task-done .td-task-text:hover {
+  text-decoration: line-through underline;
+}
+
+/* Tags */
+.td-tags-row {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: 3px;
+}
+
+.td-tag {
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  border: 1px solid var(--background-modifier-border);
+  color: var(--text-muted);
+  background: var(--background-secondary);
+}
+
+/* Meta: due + priority */
+.td-task-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  flex-shrink: 0;
+  min-width: 60px;
+}
+
+.td-due {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.td-due-overdue {
+  color: var(--text-error);
+  font-weight: 500;
+}
+
+/* Priority badges */
+.td-priority {
+  font-size: 11px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.td-priority-high {
+  background: rgba(var(--color-red-rgb), 0.15);
+  color: var(--color-red);
+  border: 1px solid rgba(var(--color-red-rgb), 0.3);
+}
+
+.td-priority-medium {
+  background: rgba(var(--color-orange-rgb), 0.15);
+  color: var(--color-orange);
+  border: 1px solid rgba(var(--color-orange-rgb), 0.3);
+}
+
+.td-priority-low {
+  background: rgba(var(--color-green-rgb), 0.15);
+  color: var(--color-green);
+  border: 1px solid rgba(var(--color-green-rgb), 0.3);
+}
+
+/* ─── Full-page layout ──────────────────────────────────────────────────────── */
+/*
+  When the dashboard is open as a full page (or the sidebar is very wide),
+  .td-fullpage is toggled on by the ResizeObserver at ≥700px container width.
+  The file blocks switch from a single stacked column to a responsive grid,
+  and the stats bar gets more columns.
+*/
+
+.td-fullpage {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 28px;
+}
+
+/* Stats — 4 cols on narrow, keep as-is; give cards slightly more breathing room */
+.td-fullpage .td-stats-row {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.td-fullpage .td-stat-card {
+  padding: 12px 16px;
+}
+
+.td-fullpage .td-stat-value {
+  font-size: 26px;
+}
+
+/* File grid — 2 columns side by side */
+.td-fullpage .td-files-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start; /* so shorter blocks don't stretch */
+}
+
+/* On very wide screens (≥1100px), go 3 columns */
+@container (min-width: 1100px) {
+  .td-fullpage .td-files-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* File blocks look slightly more spacious in full-page mode */
+.td-fullpage .td-file-header {
+  padding: 12px 16px;
+}
+
+.td-fullpage .td-task-row {
+  padding: 9px 16px;
+}
+
+/* Title slightly larger in full-page mode */
+.td-fullpage .td-title {
+  font-size: 18px !important;
+}
+
+/* Filter row wraps nicely on wide layouts */
+.td-fullpage .td-filter-row {
+  margin-bottom: 16px;
+}
+
+.td-fullpage .td-search {
+  width: 220px;
+}
+
+/* ─── Add task form ─────────────────────────────────────────────────────────── */
+
+.td-add-row {
+  border-top: 1px solid var(--background-modifier-border);
+  padding: 8px 14px;
+}
+
+/* Toggle button */
+.td-add-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  min-width: max-content;
+  transition: color 0.15s;
+}
+
+.td-add-toggle:hover,
+.td-add-toggle-active {
+  color: var(--color-accent);
+}
+
+.td-add-toggle svg {
+  flex-shrink: 0;
+  transition: transform 0.15s;
+}
+
+.td-add-toggle-active svg {
+  transform: rotate(45deg);
+}
+
+/* Form */
+.td-add-form {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.td-add-form-hidden {
+  display: none;
+}
+
+.td-add-text {
+  width: 100%;
+  font-size: 13px !important;
+  padding: 6px 10px !important;
+  border-radius: 6px !important;
+  border: 1px solid var(--background-modifier-border) !important;
+  background: var(--background-secondary) !important;
+  color: var(--text-normal) !important;
+  box-shadow: none !important;
+  height: auto !important;
+}
+
+.td-add-text:focus {
+  border-color: var(--color-accent) !important;
+  outline: none !important;
+}
+
+/* Controls row */
+.td-add-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.td-add-select {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--background-modifier-border);
+  background: var(--background-secondary);
+  color: var(--text-normal);
+  cursor: pointer;
+  height: 28px;
+}
+
+.td-add-date {
+  font-size: 12px !important;
+  padding: 4px 8px !important;
+  border-radius: 6px !important;
+  border: 1px solid var(--background-modifier-border) !important;
+  background: var(--background-secondary) !important;
+  color: var(--text-normal) !important;
+  height: 28px !important;
+  box-shadow: none !important;
+  cursor: pointer;
+}
+
+.td-add-submit {
+  font-size: 12px;
+  padding: 4px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--color-accent);
+  background: var(--color-accent);
+  color: white;
+  cursor: pointer;
+  font-weight: 500;
+  transition: opacity 0.15s;
+  height: 28px;
+}
+
+.td-add-submit:hover { opacity: 0.85; }
+.td-add-submit:disabled { opacity: 0.5; cursor: default; }
+
+.td-add-cancel {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--background-modifier-border);
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  height: 28px;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.td-add-cancel:hover {
+  color: var(--text-normal);
+  border-color: var(--text-muted);
+}
+
+/* ─── Priority cycle button ─────────────────────────────────────────────────── */
+
+.td-priority-btn {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  cursor: pointer;
+  border: 1px solid var(--background-modifier-border);
+  background: transparent;
+  font-weight: 500;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.td-priority-btn:hover {
+  border-color: var(--text-muted);
+  color: var(--text-normal);
+}
+
+/* No priority — muted dotted appearance */
+.td-priority-btn.td-pri-none {
+  color: var(--text-faint);
+  border-style: dashed;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+}
+.td-priority-btn.td-pri-none:hover {
+  color: var(--text-muted);
+  border-style: solid;
+}
+
+/* High */
+.td-priority-btn.td-pri-high {
+  background: rgba(var(--color-red-rgb), 0.12);
+  color: var(--color-red);
+  border-color: rgba(var(--color-red-rgb), 0.35);
+}
+.td-priority-btn.td-pri-high:hover {
+  background: rgba(var(--color-red-rgb), 0.2);
+}
+
+/* Medium */
+.td-priority-btn.td-pri-medium {
+  background: rgba(var(--color-orange-rgb), 0.12);
+  color: var(--color-orange);
+  border-color: rgba(var(--color-orange-rgb), 0.35);
+}
+.td-priority-btn.td-pri-medium:hover {
+  background: rgba(var(--color-orange-rgb), 0.2);
+}
+
+/* Low */
+.td-priority-btn.td-pri-low {
+  background: rgba(var(--color-green-rgb), 0.12);
+  color: var(--color-green);
+  border-color: rgba(var(--color-green-rgb), 0.35);
+}
+.td-priority-btn.td-pri-low:hover {
+  background: rgba(var(--color-green-rgb), 0.2);
+}
+
+/* ─── Title row button group ────────────────────────────────────────────────── */
+/* When there are multiple buttons in the title row, space them neatly */
+.td-title-row {
+  gap: 6px;
+}
+
+/* Divider between top-positioned add form and task list */
+.td-add-divider {
+  height: 0;
+  border-bottom: 1px dashed var(--background-modifier-border);
+  margin: 0 14px;
+}

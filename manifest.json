@@ -1,0 +1,10 @@
+{
+  "id": "todo-dashboard",
+  "name": "Todo dashboard",
+  "version": "1.0.0",
+  "minAppVersion": "1.4.0",
+  "description": "A dashboard that groups all your todo tasks by source file, with collapsible panels, priority filtering, due dates and search.",
+  "author": "Alexander",
+  "authorUrl": "https://github.com/AlexanderJacquot",
+  "isDesktopOnly": false
+}
