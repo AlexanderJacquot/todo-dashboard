@@ -161,7 +161,7 @@ class TodoDashboardView extends ItemView {
     if (this.refreshTimer) window.clearInterval(this.refreshTimer);
     const interval = this.plugin.settings.refreshInterval;
     if (interval > 0) {
-      this.refreshTimer = window.setInterval(() => this.reloadAndRender(), interval * 1000);
+      this.refreshTimer = window.setInterval(() => { void this.reloadAndRender(); }, interval * 1000);
     }
   }
 
@@ -194,11 +194,12 @@ class TodoDashboardView extends ItemView {
     const completedBtn = titleRow.createEl("button", { cls: "td-collapse-btn" });
     this.showCompletedBtn = completedBtn;
     this.updateCompletedBtn();
-    completedBtn.addEventListener("click", async () => {
+    completedBtn.addEventListener("click", () => {
       this.plugin.settings.showCompleted = !this.plugin.settings.showCompleted;
-      await this.plugin.saveSettings();
-      this.updateCompletedBtn();
-      this.renderFileBlocks();
+      void this.plugin.saveSettings().then(() => {
+        this.updateCompletedBtn();
+        this.renderFileBlocks();
+      });
     });
 
     const statsRow = header.createDiv("td-stats-row");
@@ -320,10 +321,14 @@ class TodoDashboardView extends ItemView {
       const right = fileHeader.createDiv("td-file-header-right");
       right.createSpan({ text: String(openCount), cls: "td-badge" });
       const chevron = right.createEl("span", { cls: "td-chevron" });
-      chevron.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>`;
+      const chevronSvg = chevron.createSvg("svg", { attr: { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" } });
+      chevronSvg.createSvg("polyline", { attr: { points: "9 18 15 12 9 6" } });
       const openLink = right.createEl("span", { cls: "td-open-file", title: "Open file" });
-      openLink.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
-      openLink.addEventListener("click", (e) => { e.stopPropagation(); this.app.workspace.getLeaf(false).openFile(file); });
+      const openSvg = openLink.createSvg("svg", { attr: { width: "12", height: "12", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" } });
+      openSvg.createSvg("path", { attr: { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" } });
+      openSvg.createSvg("polyline", { attr: { points: "15 3 21 3 21 9" } });
+      openSvg.createSvg("line", { attr: { x1: "10", y1: "14", x2: "21", y2: "3" } });
+      openLink.addEventListener("click", (e) => { e.stopPropagation(); void this.app.workspace.getLeaf(false).openFile(file); });
 
       if (!isOpen) continue;
 
@@ -342,12 +347,12 @@ class TodoDashboardView extends ItemView {
 
         const cb = row.createEl("input", { type: "checkbox", cls: "td-checkbox" });
         cb.checked = task.done;
-        cb.addEventListener("change", async () => { await this.toggleTask(file, task.lineNumber, task.done); });
+        cb.addEventListener("change", () => { void this.toggleTask(file, task.lineNumber, task.done); });
 
         const taskContent = row.createDiv("td-task-content");
         const taskText = taskContent.createDiv({ cls: "td-task-text" });
         taskText.setText(task.text);
-        taskText.addEventListener("click", () => { this.openFileAtLine(file, task.lineNumber); });
+        taskText.addEventListener("click", () => { void this.openFileAtLine(file, task.lineNumber); });
 
         if (task.tags.length > 0) {
           const tagsRow = taskContent.createDiv("td-tags-row");
@@ -368,10 +373,10 @@ class TodoDashboardView extends ItemView {
         if (!task.done) {
           const priBtn = meta.createEl("button", { cls: "td-priority-btn" });
           this.applyPriorityBtn(priBtn, task.priority);
-          priBtn.addEventListener("click", async (e) => {
+          priBtn.addEventListener("click", (e) => {
             e.stopPropagation();
             const next = PRIORITY_CYCLE[(PRIORITY_CYCLE.indexOf(task.priority) + 1) % PRIORITY_CYCLE.length]!;
-            await this.setPriorityOnTask(file, task.lineNumber, task.priority, next);
+            void this.setPriorityOnTask(file, task.lineNumber, task.priority, next);
             // Optimistic update — vault event will confirm
             task.priority = next;
             this.applyPriorityBtn(priBtn, next);
@@ -408,7 +413,10 @@ class TodoDashboardView extends ItemView {
   private renderAddForm(body: HTMLElement, file: TFile) {
     const addRow = body.createDiv("td-add-row");
     const addToggle = addRow.createEl("button", { cls: "td-add-toggle" });
-    addToggle.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add task`;
+    const addSvg = addToggle.createSvg("svg", { attr: { width: "13", height: "13", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2.5" } });
+    addSvg.createSvg("line", { attr: { x1: "12", y1: "5", x2: "12", y2: "19" } });
+    addSvg.createSvg("line", { attr: { x1: "5", y1: "12", x2: "19", y2: "12" } });
+    addToggle.appendText(" Add task");
 
     const addForm = addRow.createDiv("td-add-form td-add-form-hidden");
     const textInput = addForm.createEl("input", { type: "text", placeholder: "New task…", cls: "td-add-text" });
@@ -425,7 +433,7 @@ class TodoDashboardView extends ItemView {
     const showForm = () => { addToggle.addClass("td-add-toggle-active"); addForm.removeClass("td-add-form-hidden"); textInput.focus(); };
     const hideForm = () => { addToggle.removeClass("td-add-toggle-active"); addForm.addClass("td-add-form-hidden"); textInput.value = ""; prioritySelect.value = ""; dueInput.value = ""; };
 
-    addToggle.addEventListener("click", (e) => { e.stopPropagation(); addForm.hasClass("td-add-form-hidden") ? showForm() : hideForm(); });
+    addToggle.addEventListener("click", (e) => { e.stopPropagation(); if (addForm.hasClass("td-add-form-hidden")) { showForm(); } else { hideForm(); } });
     cancelBtn.addEventListener("click", (e) => { e.stopPropagation(); hideForm(); });
 
     const doSubmit = async () => {
@@ -435,8 +443,8 @@ class TodoDashboardView extends ItemView {
       await this.addTaskToFile(file, text, (prioritySelect.value || null) as "high" | "medium" | "low" | null, dueInput.value || null);
       hideForm();
     };
-    submitBtn.addEventListener("click", (e) => { e.stopPropagation(); doSubmit(); });
-    textInput.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); doSubmit(); } if (e.key === "Escape") hideForm(); });
+    submitBtn.addEventListener("click", (e) => { e.stopPropagation(); void doSubmit(); });
+    textInput.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); void doSubmit(); } if (e.key === "Escape") hideForm(); });
   }
 
   // ── File writers ──────────────────────────────────────────────────────────────
@@ -538,13 +546,13 @@ class TodoDashboardSettingTab extends PluginSettingTab {
   display() {
     const { containerEl } = this;
     containerEl.empty();
-    containerEl.createEl("h2", { text: "Todo dashboard settings" });
+
 
     new Setting(containerEl)
       .setName("Include folders")
       .setDesc("Comma-separated list of folders to scan. Leave empty to scan the entire vault.")
       .addText((text) =>
-        text.setPlaceholder("Projects, Work, Personal")
+        text.setPlaceholder("Projects, work, personal")
           .setValue(this.plugin.settings.includeFolders.join(", "))
           .onChange(async (value) => {
             this.plugin.settings.includeFolders = value.split(",").map((s) => s.trim()).filter(Boolean);
@@ -556,7 +564,7 @@ class TodoDashboardSettingTab extends PluginSettingTab {
       .setName("Exclude folders")
       .setDesc("Comma-separated list of folders to ignore.")
       .addText((text) =>
-        text.setPlaceholder("templates, archive")
+        text.setPlaceholder("Templates, archive")
           .setValue(this.plugin.settings.excludeFolders.join(", "))
           .onChange(async (value) => {
             this.plugin.settings.excludeFolders = value.split(",").map((s) => s.trim()).filter(Boolean);
@@ -574,7 +582,7 @@ class TodoDashboardSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Add task position")
-      .setDesc("Where the 'Add task' form appears inside each file block.")
+      .setDesc("Where the 'add task' form appears inside each file block.")
       .addDropdown((drop) =>
         drop
           .addOption("bottom", "Bottom of list")
@@ -608,23 +616,23 @@ export default class TodoDashboardPlugin extends Plugin {
     await this.loadSettings();
     this.registerView(VIEW_TYPE, (leaf) => new TodoDashboardView(leaf, this));
     this.addRibbonIcon("check-square", "Todo dashboard (sidebar)", () => this.openSidebar());
-    this.addCommand({ id: "open-todo-dashboard-sidebar", name: "Open in sidebar", callback: () => this.openSidebar() });
-    this.addCommand({ id: "open-todo-dashboard-fullpage", name: "Open as full page", callback: () => this.openFullPage() });
+    this.addCommand({ id: "open-sidebar", name: "Open in sidebar", callback: () => this.openSidebar() });
+    this.addCommand({ id: "open-fullpage", name: "Open as full page", callback: () => this.openFullPage() });
     this.addSettingTab(new TodoDashboardSettingTab(this.app, this));
   }
 
-  async onunload() {
-    this.app.workspace.detachLeavesOfType(VIEW_TYPE);
+  onunload() {
+    // Obsidian handles leaf lifecycle on unload
   }
 
   async openSidebar() {
     const { workspace } = this.app;
     const existing = workspace.getLeavesOfType(VIEW_TYPE)[0];
-    if (existing) { workspace.revealLeaf(existing); return; }
+    if (existing) { void workspace.revealLeaf(existing); return; }
     const leaf = workspace.getRightLeaf(false);
     if (!leaf) return;
     await leaf.setViewState({ type: VIEW_TYPE, active: true });
-    workspace.revealLeaf(leaf);
+    void workspace.revealLeaf(leaf);
   }
 
   async openFullPage() {
@@ -632,11 +640,11 @@ export default class TodoDashboardPlugin extends Plugin {
     workspace.detachLeavesOfType(VIEW_TYPE);
     const leaf = workspace.getLeaf("tab");
     await leaf.setViewState({ type: VIEW_TYPE, active: true });
-    workspace.revealLeaf(leaf);
+    void workspace.revealLeaf(leaf);
   }
 
   async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData()) as TodoDashboardSettings;
   }
 
   async saveSettings() {
