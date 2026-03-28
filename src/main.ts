@@ -56,16 +56,18 @@ function parseTasksFromContent(content: string): TodoTask[] {
   const taskRegex = /^(\s*)-\s+\[( |x|X)\]\s+(.+)$/;
 
   for (let i = 0; i < lines.length; i++) {
-    const match = lines[i].match(taskRegex);
+    const lineText = lines[i];
+    if (lineText === undefined) continue;
+    const match = lineText.match(taskRegex);
     if (!match) continue;
 
-    const done = match[2].toLowerCase() === "x";
-    const rawText = match[3];
+    const done = match[2]!.toLowerCase() === "x";
+    const rawText = match[3]!;
 
     let due: string | null = null;
     for (const re of [/📅\s*(\d{4}-\d{2}-\d{2})/, /\[due::\s*(\d{4}-\d{2}-\d{2})\]/i, /due::\s*(\d{4}-\d{2}-\d{2})/i]) {
       const m = rawText.match(re);
-      if (m) { due = m[1]; break; }
+      if (m) { due = m[1] ?? null; break; }
     }
 
     let priority: TodoTask["priority"] = null;
@@ -74,7 +76,7 @@ function parseTasksFromContent(content: string): TodoTask[] {
     else if (/🔽|⏬/.test(rawText)) priority = "low";
     if (!priority) {
       const pm = rawText.match(/\[priority::\s*(high|medium|low)\]/i);
-      if (pm) priority = pm[1].toLowerCase() as TodoTask["priority"];
+      if (pm) priority = pm[1]!.toLowerCase() as TodoTask["priority"];
     }
 
     const tags = rawText.match(/#[\w/-]+/g) ?? [];
@@ -272,10 +274,10 @@ class TodoDashboardView extends ItemView {
       open++;
       if (t.due && new Date(t.due) < today) overdue++;
     }));
-    this.statEls["open"].textContent = String(open);
-    this.statEls["files"].textContent = String(this.todoFiles.filter((f) => f.tasks.some((t) => !t.done)).length);
-    this.statEls["overdue"].textContent = String(overdue);
-    this.statEls["done"].textContent = String(done);
+    this.statEls["open"]!.textContent = String(open);
+    this.statEls["files"]!.textContent = String(this.todoFiles.filter((f) => f.tasks.some((t) => !t.done)).length);
+    this.statEls["overdue"]!.textContent = String(overdue);
+    this.statEls["done"]!.textContent = String(done);
   }
 
   // ── File blocks (re-rendered on filter/search/vault changes) ─────────────────
@@ -368,7 +370,7 @@ class TodoDashboardView extends ItemView {
           this.applyPriorityBtn(priBtn, task.priority);
           priBtn.addEventListener("click", async (e) => {
             e.stopPropagation();
-            const next = PRIORITY_CYCLE[(PRIORITY_CYCLE.indexOf(task.priority) + 1) % PRIORITY_CYCLE.length];
+            const next = PRIORITY_CYCLE[(PRIORITY_CYCLE.indexOf(task.priority) + 1) % PRIORITY_CYCLE.length]!;
             await this.setPriorityOnTask(file, task.lineNumber, task.priority, next);
             // Optimistic update — vault event will confirm
             task.priority = next;
@@ -442,9 +444,11 @@ class TodoDashboardView extends ItemView {
   private async toggleTask(file: TFile, lineNumber: number, currentDone: boolean) {
     const content = await this.app.vault.read(file);
     const lines = content.split("\n");
+    const currentLine = lines[lineNumber];
+    if (currentLine === undefined) return;
     lines[lineNumber] = currentDone
-      ? lines[lineNumber].replace(/\[x\]/i, "[ ]")
-      : lines[lineNumber].replace(/\[ \]/, "[x]");
+      ? currentLine.replace(/\[x\]/i, "[ ]")
+      : currentLine.replace(/\[ \]/, "[x]");
     await this.app.vault.modify(file, lines.join("\n"));
   }
 
@@ -452,6 +456,7 @@ class TodoDashboardView extends ItemView {
     const content = await this.app.vault.read(file);
     const lines = content.split("\n");
     let line = lines[lineNumber];
+    if (line === undefined) return;
 
     // Strip all existing priority markers
     line = line.replace(/\s*[🔺⏫🔼🔽⏬]/gu, "");
@@ -475,7 +480,7 @@ class TodoDashboardView extends ItemView {
 
     let insertAt = lines.length;
     for (let i = lines.length - 1; i >= 0; i--) {
-      if (/^\s*-\s+\[[ xX]\]/.test(lines[i])) { insertAt = i + 1; break; }
+      if (/^\s*-\s+\[[ xX]\]/.test(lines[i]!)) { insertAt = i + 1; break; }
     }
     lines.splice(insertAt, 0, taskLine);
     while (lines.length > 1 && lines[lines.length - 1] === "" && lines[lines.length - 2] === "") lines.pop();
