@@ -138,10 +138,11 @@ class TodoDashboardView extends ItemView {
     this.resizeObserver.observe(this.containerEl);
   }
 
-  async onClose(): Promise<void> {
+  onClose(): Promise<void> {
     if (this.refreshTimer) window.clearInterval(this.refreshTimer);
     if (this.searchDebounce) window.clearTimeout(this.searchDebounce);
     if (this.resizeObserver) this.resizeObserver.disconnect();
+    return Promise.resolve();
   }
 
   private applyLayoutClass() {
